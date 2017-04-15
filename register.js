@@ -15,6 +15,12 @@ Reaction.registerPackage({
       name: "about",
       template: "aboutUs",
       workflow: "coreWorkflow"
+    },
+    {
+      route: "/tag/:slug?",
+      name: "tag",
+      template: "productsLanding",
+      workflow: "coreProductGridWorkflow"
     }
   ],
   layout: [{
@@ -33,7 +39,7 @@ Reaction.registerPackage({
       dashboardControls: "dashboardControls",
       dashboardHeaderControls: "",
       adminControlsFooter: "adminControlsFooter"
-    } }
-  ]
+    } 
+  }]
 });
 

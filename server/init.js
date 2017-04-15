@@ -35,13 +35,30 @@ function addRolesToVisitors() {
 function changeLayouts(shopId, newLayout) {
   check(shopId, String);
   check(newLayout, String);
+
+  // Change all layouts to newLayout
   Logger.info(`::: changing all layouts to ${newLayout}`);
   const shop = Shops.findOne(shopId);
   for (let i = 0; i < shop.layout.length; i++) {
-    shop.layout[i].layout = newLayout;
+    // Only for workflow that different from ours
+    if (shop.layout[i].workflow !== "coreProductGridWorkflow")
+      shop.layout[i].layout = newLayout;
   }
   return Shops.update(shopId, {
     $set: { layout: shop.layout }
+  });
+}
+
+function removeDuplicatedRoutes() {
+  // Remove duplicated routes
+  Logger.info("::: Removing duplicated routes");
+  Packages.remove({
+    registry: {
+      $elemMatch: {
+        name: "tag",
+        workflow: "coreProductWorkflow"
+      }
+    }
   });
 }
 
@@ -52,4 +69,5 @@ Hooks.Events.add("afterCoreInit", () => {
   modifyCheckoutWorkflow();
   addRolesToVisitors();
   changeLayouts(Reaction.getShopId(), "coreLayoutBeesknees");
+  removeDuplicatedRoutes();
 });
